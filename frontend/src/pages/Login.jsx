@@ -1,4 +1,3 @@
-// src/pages/Login.js
 import React, { useState } from 'react';
 
 const Login = () => {
@@ -14,7 +13,7 @@ const Login = () => {
     // Clear previous error
     setError('');
 
-    // Send a POST request to your login endpoint
+    // Send a POST request to login endpoint
     try {
       const response = await fetch('http://localhost:5000/auth/login', {
         method: 'POST',
@@ -24,19 +23,16 @@ const Login = () => {
         body: JSON.stringify({ email, password }),
       });
 
-      // Check if the login was successful
       if (!response.ok) {
         throw new Error('Login failed. Please check your credentials.');
       }
 
-      // Handle successful login (e.g., save token, redirect user, etc.)
       const data = await response.json();
       console.log('Login successful:', data);
-      // You can save the token in localStorage and redirect
-      localStorage.setItem('token', data.token); // Example
-      window.location.href = '/'; // Redirect to home or dashboard
+      localStorage.setItem('token', data.token);
+      window.location.href = '/'; 
     } catch (err) {
-      setError(err.message); // Set error message
+      setError(err.message); 
     }
   };
 
