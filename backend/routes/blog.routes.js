@@ -9,6 +9,6 @@ import { verifyToken } from "../middleware/auth.js";
 const router = express.Router();
 
 router.post("/", verifyToken, createBlogs);
-router.get("/", verifyToken, getAllBlogs);
-router.get("/:id", verifyToken, getBlogById);
+router.get("/",  getAllBlogs);
+router.get("/:id", getBlogById);
 export default router;

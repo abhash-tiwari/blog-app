@@ -1,54 +1,118 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import Logo from "../../src/assets/writeup.jpg";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
-const Navbar = ({ children }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // State to track if the user is logged in
-  const [searchTerm, setSearchTerm] = useState(''); // State for search input
+const Navbar = ({ onSearch }) => {
+  const [username, setUsername] = useState(null);
+  const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState("");
+
+  useEffect(() => {
+    // Check if the user is logged in by checking for a token and username in localStorage
+    const token = localStorage.getItem("token");
+    const storedUsername = localStorage.getItem("username");
+
+    console.log("Token:", token); // Debugging: check if token exists
+    console.log("Stored Username:", storedUsername); // Debugging: check if username exists
+
+    if (token && storedUsername) {
+      setUsername(storedUsername); // Set the username if the user is logged in
+    }
+  }, []);
 
   const handleLogout = () => {
-    setIsLoggedIn(false);
+    localStorage.removeItem("token");
+    localStorage.removeItem("username");
+    setUsername(null);
+    navigate("/login");
   };
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    console.log("Searching for:", searchTerm);
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const handleSearchSubmit = (event) => {
+    event.preventDefault(); // Prevent page reload
+    onSearch(searchTerm);
+    setSearchTerm('');
+  };
+
+  const handleWriteClick = () => {
+    if (!username) {
+      alert("You should login first."); // Alert if not logged in
+    } else {
+      navigate("/create-blog"); // Navigate to create blog if logged in
+    }
   };
 
   return (
-    <div>
-      <header className=" flex items-center justify-between p-4">
-        <div className="relative">
-          <img src={Logo} alt="Logo" className="w-16 h-16 mx-4" />
-        </div>
-        <form onSubmit={handleSearch} className="flex items-center">
-          <input 
-            type="text" 
-            value={searchTerm} 
-            onChange={(e) => setSearchTerm(e.target.value)} 
-            placeholder="Search..." 
-            className="p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-600"
+    <nav className="bg-gray-800 p-4 text-yellow-300 tracking-wide shadow-lg">
+      <div className="flex items-center justify-between">
+        <Link to="/">
+          <h1 className="text-2xl font-bold hover:text-yellow-400 transition duration-300">
+            WriteUp
+          </h1>
+        </Link>
+
+        <form onSubmit={handleSearchSubmit} className="flex">
+          <input
+            type="text"
+            placeholder="Search by country..."
+            value={searchTerm}
+            onChange={handleSearchChange}
+            className="p-2 rounded-l border border-gray-600 text-black"
+            aria-label="Search by country"
           />
-          <button type="submit" className="ml-2 bg-gray-700 hover:bg-gray-600 text-white p-2 rounded transition duration-300">
+          <button type="submit" className="bg-yellow-400 text-gray-800 p-2 rounded-r hover:bg-yellow-300 transition duration-300">
             Search
           </button>
         </form>
-        <nav className="flex space-x-4">
-          <Link to="/" className="hover:bg-gray-700 p-2 rounded transition duration-300">Home</Link>
-          {isLoggedIn ? (
+
+        <ul className="flex space-x-6">
+          <li>
+            <button
+              onClick={handleWriteClick}
+              className="hover:text-yellow-400 transition duration-200"
+            >
+              Post
+            </button>
+          </li>
+          {!username ? (
             <>
-              <button onClick={handleLogout} className="hover:bg-gray-700 p-2 rounded transition duration-300">Logout</button>
+              <li>
+                <Link
+                  to="/register"
+                  className="hover:text-yellow-400 transition duration-200"
+                >
+                  Register
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/login"
+                  className="hover:text-yellow-400 transition duration-200"
+                >
+                  Login
+                </Link>
+              </li>
             </>
           ) : (
             <>
-              <Link to="/login" className="hover:bg-gray-700 p-2 rounded transition duration-300">Login</Link>
-              <Link to="/register" className="hover:bg-gray-700 p-2 rounded transition duration-300">Register</Link>
+              <li className="hover:text-yellow-400 transition duration-200">
+                {username.toUpperCase()}
+              </li>
+              <li>
+                <button
+                  onClick={handleLogout}
+                  className="hover:text-yellow-400 transition duration-200"
+                >
+                  Logout
+                </button>
+              </li>
             </>
           )}
-        </nav>
-      </header>
-      <main>{children}</main>
-    </div>
+        </ul>
+      </div>
+    </nav>
   );
 };
 

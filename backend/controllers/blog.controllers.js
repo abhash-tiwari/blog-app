@@ -1,4 +1,4 @@
-import Blog from "../models/blog.models.js";
+import Blog from "../models/blog.model.js";
 
 export const createBlogs = async (req, res) => {
   try {
@@ -22,7 +22,7 @@ export const createBlogs = async (req, res) => {
 
 export const getAllBlogs = async (req, res) => {
   try {
-    const blogs = await Blog.find().populate("author", "username email");
+    const blogs = await Blog.find()
     res.json(blogs);
   } catch (error) {
     res.status(500).json({ message: "Error fetching blogs" });
