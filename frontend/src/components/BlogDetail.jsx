@@ -9,7 +9,7 @@ const BlogDetail = () => {
   useEffect(() => {
     async function fetchBlogPost() {
       try {
-        const response = await fetch(`http://localhost:5000/blogs/${id}`);
+        const response = await fetch(`https://blog-app-2-xci4.onrender.com/blogs/${id}`);
         if (response.ok) {
           const data = await response.json();
           setPost(data);

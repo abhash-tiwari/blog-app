@@ -12,7 +12,7 @@ const PaymentPage = () => {
     const token = localStorage.getItem("token");
 
     try {
-      const response = await fetch("http://localhost:5000/api/blogs", {
+      const response = await fetch("https://blog-app-2-xci4.onrender.com/api/blogs", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -14,7 +14,7 @@ const Home = ({ searchCountry }) => {
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const response = await fetch("http://localhost:5000/blogs");
+        const response = await fetch("https://blog-app-2-xci4.onrender.com/blogs");
         if (response.ok) {
           const data = await response.json();
           setBlogs(data);
